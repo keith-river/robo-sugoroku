@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>ロボ箱庭すごろく</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <!-- three.js は public/vendor/three に同梱（CDN なし・LAN内でも動く） -->
+    <script type="importmap">
+      { "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/" } }
+    </script>
+  </head>
+  <body>
+    <canvas id="stage"></canvas>
+
+    <header class="top">
+      <h1><span class="logo">🤖</span>ロボ箱庭すごろく</h1>
+      <div id="turn-badge" class="turn-badge">接続中…</div>
+      <button id="log-toggle" class="icon-btn" title="ログ" aria-label="ログ">📜</button>
+    </header>
+
+    <aside id="players" class="players" aria-label="参加ロボ"></aside>
+    <aside id="log-panel" class="log-panel" hidden>
+      <h2>バトルログ</h2>
+      <ol id="log"></ol>
+    </aside>
+
+    <div id="banner" class="banner" aria-live="polite"></div>
+
+    <div id="versus" class="versus" hidden>
+      <div class="side" id="vs-a"><div class="who"></div><div class="hand">❔</div><div class="st"></div></div>
+      <div class="vs">VS</div>
+      <div class="side" id="vs-b"><div class="who"></div><div class="hand">❔</div><div class="st"></div></div>
+      <div class="vs-msg" id="vs-msg"></div>
+    </div>
+
+    <section id="actions" class="actions">
+      <div id="msg" class="msg"></div>
+      <div id="dir-box" class="choice" hidden>
+        <button class="big dir ccw" data-dir="ccw"><span class="ar">↺</span>左回り</button>
+        <button class="big dir cw" data-dir="cw">右回り<span class="ar">↻</span></button>
+      </div>
+      <div id="hand-box" class="choice" hidden>
+        <button class="big hand-btn" data-hand="rock"><span class="em">✊</span>グー</button>
+        <button class="big hand-btn" data-hand="scissors"><span class="em">✌️</span>チョキ</button>
+        <button class="big hand-btn" data-hand="paper"><span class="em">✋</span>パー</button>
+        <div class="timer"><i id="timer-bar"></i></div>
+      </div>
+    </section>
+
+    <!-- ロビー -->
+    <section id="lobby" class="overlay" hidden>
+      <div class="card">
+        <h2>🤖 ロボ箱庭すごろく</h2>
+        <p class="lead">20個の石畳の輪を、サイコロの目だけ進もう。ライバルと同じ石・すれ違いは<b>ジャンケン</b>！負けるとライフ−1。最後まで生き残った者が勝ち。</p>
+        <label class="name-row">あなたの名前 <input id="name-input" maxlength="12" autocomplete="off" spellcheck="false" /></label>
+        <ul id="lobby-list" class="lobby-list"></ul>
+        <div class="row">
+          <button id="add-bot" class="btn ghost">＋ CPUを追加</button>
+          <button id="remove-bot" class="btn ghost">− CPUを減らす</button>
+        </div>
+        <button id="start-btn" class="btn primary" disabled>ゲーム開始</button>
+        <p id="lobby-hint" class="hint"></p>
+      </div>
+    </section>
+
+    <!-- 結果 -->
+    <section id="over" class="overlay clear" hidden>
+      <div class="card result">
+        <div class="trophy">🏆</div>
+        <h2 id="over-title"></h2>
+        <ol id="over-rank" class="rank"></ol>
+        <button id="lobby-btn" class="btn primary">ロビーに戻る</button>
+      </div>
+    </section>
+
+    <div id="webgl-error" class="webgl-error" hidden>
+      このブラウザでは3D表示（WebGL）が使えません。ブラウザの設定を確認するか、別のブラウザでお試しください。
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
